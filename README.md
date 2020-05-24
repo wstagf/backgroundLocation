@@ -17,3 +17,11 @@ samples, guidance on mobile development, and a full API reference.
 
 
  - flutter packages pub run build_runner watch --delete-conflicting-outputs
+
+ ## Coinfiguracao 
+ 
+    1.  Alterar android\app\build.gradle  => compileSdkVersion para 29 e targetSdkVersion para 29
+    2.  Alterar android\app\build.gradle => Adicionar dependencias em dependencies...  implementation 'com.google.android.gms:play-services-location:16.0.0'
+
+
+
