@@ -1,5 +1,7 @@
 
 
+package com.example.backgroundLocation;
+
 import android.content.Context;
 import android.location.Location;
 import android.preference.PreferenceManager;
@@ -42,7 +44,7 @@ class Utils {
     }
 
     static String getLocationTitle(Context context) {
-        return "Estamos obtendo sua localização: " + 
+        return "Estamos obtendo sua localização: " +
                 DateFormat.getDateTimeInstance().format(new Date());
     }
 }

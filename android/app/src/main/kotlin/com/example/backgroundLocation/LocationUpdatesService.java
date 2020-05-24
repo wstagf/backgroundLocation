@@ -1,4 +1,4 @@
-
+package com.example.backgroundLocation;
 
 import android.app.ActivityManager;
 import android.app.Notification;
@@ -28,6 +28,10 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.embedding.engine.dart.DartExecutor;
+import io.flutter.plugin.common.MethodChannel;
 
 /**
  * A bound and started service that is promoted to a foreground service when location updates have
@@ -142,7 +146,7 @@ public class LocationUpdatesService extends Service {
 
         // Android O requires a Notification Channel.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.app_name);
+            CharSequence name = "Nome do meu app";
             // Create the channel for the notification
             NotificationChannel mChannel =
                     new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
@@ -155,6 +159,7 @@ public class LocationUpdatesService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "Service started");
+
         boolean startedFromNotification = intent.getBooleanExtra(EXTRA_STARTED_FROM_NOTIFICATION,
                 false);
 
@@ -162,10 +167,10 @@ public class LocationUpdatesService extends Service {
 
         flutterEngine = new FlutterEngine(this);
         flutterEngine.getNavigationChannel().setInitialRoute("/callback");
-        flutterEngine.getDartExecutor().executeDartEntrypoint(DartExecutor.DartEntryPoint.createDefault());
+        flutterEngine.getDartExecutor().executeDartEntrypoint(DartExecutor.DartEntrypoint.createDefault());
         flutterEngine.getPlugins().add(new io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin());
 
-        channel = new MethodChannel(flutterEngine.getDartExecutor(), "geolocation_plugin")
+        channel = new MethodChannel(flutterEngine.getDartExecutor(), "geolocation_plugin");
 
         // We got here because the user decided to remove location updates from the notification.
         if (startedFromNotification) {
@@ -194,6 +199,7 @@ public class LocationUpdatesService extends Service {
     }
 
     @Override
+
     public void onRebind(Intent intent) {
         // Called when a client (MainActivity in case of this sample) returns to the foreground
         // and binds once again with this service. The service should cease to be a foreground
@@ -221,6 +227,9 @@ public class LocationUpdatesService extends Service {
 
     @Override
     public void onDestroy() {
+        if (flutterEngine != null) {
+            flutterEngine.destroy();
+        }
         mServiceHandler.removeCallbacksAndMessages(null);
     }
 
@@ -277,10 +286,8 @@ public class LocationUpdatesService extends Service {
                 new Intent(this, MainActivity.class), 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .addAction(R.drawable.ic_launch, getString(R.string.launch_activity),
-                        activityPendingIntent)
-                .addAction(R.drawable.ic_cancel, getString(R.string.remove_location_updates),
-                        servicePendingIntent)
+                .addAction(0, "ABRIR APP", activityPendingIntent)
+                .addAction(0, "PARAR", servicePendingIntent)
                 .setContentText(text)
                 .setContentTitle(Utils.getLocationTitle(this))
                 .setOngoing(true)
@@ -319,9 +326,8 @@ public class LocationUpdatesService extends Service {
         Log.i(TAG, "New location: " + location);
 
         mLocation = location;
+        channel.invokeMethod("callbackLocation", location.getLatitude() + "," + location.getLongitude() + "," + location.getSpeed() + "," + serviceIsRunningInForeground(this));
 
-        channel.invokeMethod("callbackLocation", location.getLatitude() + "," +  location.getLongitude()  + "," + location.getSpeed() + "," + serviceIsRunningInForeground(this));
-        
         // Notify anyone listening for broadcasts about the new location.
         Intent intent = new Intent(ACTION_BROADCAST);
         intent.putExtra(EXTRA_LOCATION, location);

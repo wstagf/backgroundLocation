@@ -15,6 +15,7 @@
  */
 
 package com.example.backgroundLocation;
+
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -89,7 +90,6 @@ public class MainActivity extends FlutterActivity {
     private class MyReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            //TODO: Implementar codigo para receber a latitude e longitute quando estiver em foreground.
         }
     }
 }
