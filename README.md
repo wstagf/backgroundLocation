@@ -36,7 +36,7 @@ samples, guidance on mobile development, and a full API reference.
             flutterEngine.getDartExecutor().executeDartEntrypoint(DartExecutor.DartEntryPoint.createDefault());
             flutterEngine.getPlugins().add(new io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin());
 
-            channel = new MethodChannel(flutterEngine.getDartExecutor(), "geolocation_plugin")
+            channel = new MethodChannel(flutterEngine.getDartExecutor(), "geolocation_plugin");
 
             // We got here because the user decided to remove location updates from the notification.
             if (startedFromNotification) {
@@ -86,5 +86,9 @@ samples, guidance on mobile development, and a full API reference.
           android:exported="true"
           android:foregroundServiceType="location"
         />
+
+    8. Ir para o flutter
+
+    9. 
 
 
