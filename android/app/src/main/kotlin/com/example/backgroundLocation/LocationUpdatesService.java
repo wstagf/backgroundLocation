@@ -158,6 +158,15 @@ public class LocationUpdatesService extends Service {
         boolean startedFromNotification = intent.getBooleanExtra(EXTRA_STARTED_FROM_NOTIFICATION,
                 false);
 
+        context = getApplicationContext();
+
+        flutterEngine = new FlutterEngine(this);
+        flutterEngine.getNavigationChannel().setInitialRoute("/callback");
+        flutterEngine.getDartExecutor().executeDartEntrypoint(DartExecutor.DartEntryPoint.createDefault());
+        flutterEngine.getPlugins().add(new io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin());
+
+        channel = new MethodChannel(flutterEngine.getDartExecutor(), "geolocation_plugin")
+
         // We got here because the user decided to remove location updates from the notification.
         if (startedFromNotification) {
             removeLocationUpdates();
