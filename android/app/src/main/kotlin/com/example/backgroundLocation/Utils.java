@@ -42,7 +42,7 @@ class Utils {
     }
 
     static String getLocationTitle(Context context) {
-        return context.getString(R.string.location_updated,
-                DateFormat.getDateTimeInstance().format(new Date()));
+        return "Estamos obtendo sua localização: " + 
+                DateFormat.getDateTimeInstance().format(new Date());
     }
 }
