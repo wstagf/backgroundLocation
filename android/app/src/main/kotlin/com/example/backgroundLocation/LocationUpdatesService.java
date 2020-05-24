@@ -111,6 +111,11 @@ public class LocationUpdatesService extends Service {
      */
     private Location mLocation;
 
+    Context context;
+
+    FlutterEngine flutterEngine;
+
+    MethodChannel channel;
 
     public LocationUpdatesService() {
     }
